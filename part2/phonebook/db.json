@@ -1,9 +1,3 @@
 {
-  "persons": [
-    {
-      "name": "luke shea",
-      "number": "123",
-      "id": "6707"
-    }
-  ]
+  "persons": []
 }

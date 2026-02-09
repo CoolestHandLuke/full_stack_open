@@ -7,6 +7,7 @@ const PersonForm = ({
 	setPersons,
 	addPerson,
 	updatePerson,
+	setNotification,
 }) => {
 	const handleName = event => {
 		setNewName(event.target.value)
@@ -31,6 +32,10 @@ const PersonForm = ({
 					`${newName} is already in the phonebook, do you want to update their number?`
 				)
 			) {
+				const newNotification = {
+					type: 'success',
+					message: `Successfully updated the record for ${duplicate.name}.`,
+				}
 				updatePerson(duplicate.id, newPersonObject)
 					.then(response => {
 						setPersons(
@@ -42,22 +47,41 @@ const PersonForm = ({
 						)
 						setNewName('')
 						setNewNumber('')
+						setNotification(newNotification)
 					})
 					.catch(error => {
-						console.log('error in updating person', error)
+						console.error('Error in updating the phonebook:', error)
+						const newNotification = {
+							type: 'error',
+							message: `Information on ${newPersonObject.name} has already been removed from the server`,
+						}
+						setNotification(newNotification)
+
+						setTimeout(() => {
+							setNotification(null)
+						}, 5000)
 					})
 			}
 		} else {
+			const newNotification = {
+				type: 'success',
+				message: `Successfully added ${newPersonObject.name} to the phonebook.`,
+			}
 			addPerson(newPersonObject)
 				.then(responsedPerson => {
 					setPersons(persons.concat(responsedPerson))
 					setNewName('')
 					setNewNumber('')
+					setNotification(newNotification)
 				})
 				.catch(error => {
 					console.error('error in adding new person', error)
 				})
 		}
+
+		setTimeout(() => {
+			setNotification(null)
+		}, 5000)
 	}
 	return (
 		<form onSubmit={handleSubmit}>
